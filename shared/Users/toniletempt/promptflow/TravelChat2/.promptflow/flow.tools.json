@@ -1,0 +1,36 @@
+{
+  "package": {},
+  "code": {
+    "chat.jinja2": {
+      "name": "chat.jinja2",
+      "type": "prompt",
+      "inputs": {
+        "chat_history": {
+          "type": [
+            "string"
+          ],
+          "allow_manual_entry": false,
+          "is_multi_select": false,
+          "input_type": "default",
+          "value": "${inputs.chat_history}",
+          "id": "ax7lfx9j"
+        },
+        "question": {
+          "type": [
+            "string"
+          ],
+          "allow_manual_entry": false,
+          "is_multi_select": false,
+          "input_type": "default",
+          "value": "${inputs.question}",
+          "id": "owhwtoqu"
+        }
+      },
+      "source": "chat.jinja2",
+      "is_builtin": false,
+      "enable_kwargs": false,
+      "tool_state": "stable",
+      "toolId": "chat.jinja2"
+    }
+  }
+}

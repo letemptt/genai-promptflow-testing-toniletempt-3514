@@ -1,0 +1,12 @@
+{
+    "package": {},
+    "code": {
+      "chat.jinja2": {
+        "name": "chat.jinja2",
+        "type": "prompt",            
+        "inputs": {"question":{"type":["string"],"allow_manual_entry":false,"is_multi_select":false,"input_type":"default","value":"${inputs.question}"},"chat_history":{"type":["string"],"allow_manual_entry":false,"is_multi_select":false,"input_type":"default","value":"${inputs.chat_history}"}},
+        "description": "Chat with Chatbot",
+        "is_builtin": false
+      }
+    }
+}

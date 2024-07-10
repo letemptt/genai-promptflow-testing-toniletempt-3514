@@ -4,8 +4,31 @@ import os
 from dotenv import load_dotenv
 import ssl
 import random
+import csv
+import sys
+
 
 load_dotenv()
+
+def write_header(output_file=None, header_list=None):
+    try:
+        with open(output_file, mode='w') as csvfile:
+            #write rows
+            writer = csv.DictWriter(csvfile, delimiter=',', fieldnames=header_list)
+            writer.writeheader()
+    except Exception as e:
+        print("failed to write header csv file %s" % (e))
+    return
+
+def write_csv(output_file=None, question=None, answer=None, chat_context=None):
+    try:
+        with open(output_file, mode='a') as csvfile:
+            #write rows
+            writer = csv.writer(csvfile)
+            writer.writerow([question, answer, chat_context])
+    except Exception as e:
+        print("failed to write csv file %s" % (e))
+    return
 
 def allowSelfSignedHttps(allowed):
     # bypass the server certificate verification on client side
@@ -15,6 +38,9 @@ def allowSelfSignedHttps(allowed):
 allowSelfSignedHttps(True) # this line is needed if you use self-signed certificate in your scoring service.
 
 num_of_questions = int(os.getenv("NUM_OF_QUESTIONS"))
+output_file = os.getenv("OUTPUT_FILE")
+header_list = ['Question', 'Answer', 'Context']
+write_header(output_file, header_list)
 print("Number of questions: ", num_of_questions)
 rand_num = random.randint(1, int(num_of_questions))
 print("Random number when invalid prompt will be sent!!!: ", rand_num)
@@ -37,7 +63,7 @@ data = {
     ],
     "question" : initPrompt,
 }
-
+chat_context = data
 body = str.encode(json.dumps(data))
 
 url = os.getenv("BASE_ENDPOINT")
@@ -75,7 +101,7 @@ try:
                     "question": "I have one day in London, what should I do?"
                     },
                     "outputs": {
-                    "answer": "You can visit Buckingham Palace."
+                    "answer": "You can visit Buckingham Palace. You can also visit the London Eye."
                     }
                 }    
              ],
@@ -86,6 +112,7 @@ try:
         response = urllib.request.urlopen(req)
         result = response.read()
         print("The question was: ", question, ": ", result)
+        write_csv(output_file, question, json.loads(result)['answer'], chat_context)
 
 except urllib.error.HTTPError as error:
     print("The request failed with status code: " + str(error.code))

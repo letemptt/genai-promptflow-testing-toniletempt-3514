@@ -7,11 +7,12 @@ import random
 import csv
 import sys
 import writecsv as writecsv
+import writejson as writejson
 
 
 load_dotenv()
 
-'''def write_header(output_file=None, header_list=None):
+def write_header(output_file=None, header_list=None):
     try:
         with open(output_file, mode='w') as csvfile:
             #write rows
@@ -19,9 +20,9 @@ load_dotenv()
             writer.writeheader()
     except Exception as e:
         print("failed to write header csv file %s" % (e))
-    return'''
+    return
 
-'''def write_csv(output_file=None, question=None, answer=None, chat_context=None):
+def write_csv(output_file=None, question=None, answer=None, chat_context=None):
     try:
         with open(output_file, mode='a') as csvfile:
             #write rows
@@ -29,7 +30,7 @@ load_dotenv()
             writer.writerow([question, answer, chat_context])
     except Exception as e:
         print("failed to write csv file %s" % (e))
-    return'''
+    return
 
 def allowSelfSignedHttps(allowed):
     # bypass the server certificate verification on client side
@@ -39,7 +40,8 @@ def allowSelfSignedHttps(allowed):
 allowSelfSignedHttps(True) # this line is needed if you use self-signed certificate in your scoring service.
 
 num_of_questions = int(os.getenv("NUM_OF_QUESTIONS"))
-output_file = os.getenv("OUTPUT_FILE")
+output_file = os.getenv("CSV_FILE")
+jsonl_file = os.getenv("JSONL_FILE")
 header_list = ['Question', 'Answer', 'Context']
 writecsv.write_header(output_file, header_list)
 print("Number of questions: ", num_of_questions)
@@ -114,7 +116,7 @@ try:
         result = response.read()
         print("The question was: ", question, ": ", result)
         writecsv.write_csv(output_file, question, json.loads(result)['answer'], chat_context)
-
+    writejson.write_json(output_file, jsonl_file)
 except urllib.error.HTTPError as error:
     print("The request failed with status code: " + str(error.code))
 
